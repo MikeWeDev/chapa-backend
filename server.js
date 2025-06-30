@@ -19,7 +19,7 @@ mongoose.connect(process.env.MONGO_URI, {
 .catch((err) => console.log("❌ Mongo Error:", err));
 
 // Import Payment model here or in paymentRoutes.js (recommended to put it in separate models folder)
-require("./models/Payment");
+require("./model/payment");
 
 // Import payment routes
 const paymentRoutes = require("./routes/paymentRoutes");

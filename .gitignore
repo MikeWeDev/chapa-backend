@@ -1,0 +1,4 @@
+.env
+PORT=5173
+CHAPA_SECRET_KEY=CHASECK_TEST-3PWHuwYklaegSh1Sgs823AKnrnCOBSlX
+MONGO_URI=mongodb+srv://alazar:12345678!@cluster0.hiwht.mongodb.net/Bingo?retryWrites=true&w=majority&appName=Cluster0

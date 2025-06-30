@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const Payment = require("../model/payment"); 
+const Payment = require("../model/payment");
 const axios = require("axios");
 
 const CHAPA_SECRET_KEY = process.env.CHAPA_SECRET_KEY;
@@ -17,9 +17,27 @@ router.post("/accept-payment", async (req, res) => {
     tx_ref,
   } = req.body;
 
-  console.log("🔐 Incoming Payment Request:", req.body); // 👈 Add this
+  console.log("🔐 Incoming Payment Request:", req.body); // Log incoming request
 
   try {
+    // Save payment as pending BEFORE calling Chapa API
+    await Payment.findOneAndUpdate(
+      { tx_ref },
+      {
+        tx_ref,
+        amount,
+        currency,
+        email,
+        first_name,
+        last_name,
+        phone_number,
+        status: "pending",
+        createdAt: new Date(),
+      },
+      { upsert: true, new: true }
+    );
+
+    // Call Chapa to initialize the payment
     const chapaRes = await axios.post(
       "https://api.chapa.co/v1/transaction/initialize",
       {
@@ -43,13 +61,13 @@ router.post("/accept-payment", async (req, res) => {
     console.log("✅ Chapa init response:", chapaRes.data);
     res.status(200).json(chapaRes.data);
   } catch (err) {
-    console.error("❌ Chapa error:", err.response?.data || err.message); // 👈 Add this
+    console.error("❌ Chapa or DB error:", err.response?.data || err.message);
+    // Optional: you can update payment status to 'failed' here if needed
     res.status(400).json({ message: err.message, chapa: err.response?.data });
   }
 });
 
-
-// Webhook route if success we will update the user baalce in our db
+// Webhook route: update payment status after Chapa confirms success
 router.post("/webhook", express.json(), async (req, res) => {
   const data = req.body;
 
@@ -70,7 +88,7 @@ router.post("/webhook", express.json(), async (req, res) => {
   res.sendStatus(200);
 });
 
-// Check payment status route
+// Route to check payment status by tx_ref
 router.get("/check-payment/:tx_ref", async (req, res) => {
   try {
     const tx = await Payment.findOne({ tx_ref: req.params.tx_ref });

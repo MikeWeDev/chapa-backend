@@ -17,6 +17,8 @@ router.post("/accept-payment", async (req, res) => {
     tx_ref,
   } = req.body;
 
+  console.log("🔐 Incoming Payment Request:", req.body); // 👈 Add this
+
   try {
     const chapaRes = await axios.post(
       "https://api.chapa.co/v1/transaction/initialize",
@@ -38,11 +40,14 @@ router.post("/accept-payment", async (req, res) => {
       }
     );
 
+    console.log("✅ Chapa init response:", chapaRes.data);
     res.status(200).json(chapaRes.data);
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    console.error("❌ Chapa error:", err.response?.data || err.message); // 👈 Add this
+    res.status(400).json({ message: err.message, chapa: err.response?.data });
   }
 });
+
 
 // Webhook route if success we will update the user baalce in our db
 router.post("/webhook", express.json(), async (req, res) => {

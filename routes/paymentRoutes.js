@@ -76,7 +76,7 @@ router.post("/webhook", express.json(), async (req, res) => {
 
     await Payment.findOneAndUpdate(
       { tx_ref },
-      { email, amount, status: "success" },
+      { email, amount, status: "success",webhookTriggered: true, },
       { upsert: true }
     );
 

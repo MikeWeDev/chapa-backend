@@ -48,7 +48,7 @@ router.post("/accept-payment", async (req, res) => {
         last_name,
         phone_number,
         tx_ref,
-        return_url: `${process.env.FRONTEND_URL}/payment-success`,
+       return_url: "https://chapa-payment-test.netlify.app/payment-success"
       },
       {
         headers: {

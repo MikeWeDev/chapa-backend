@@ -4,7 +4,7 @@ const PaymentSchema = new mongoose.Schema({
   tx_ref: {
     type: String,
     required: true,
-    unique: true,   // ensure tx_ref is unique for each payment
+    unique: true,
   },
   email: {
     type: String,
@@ -18,6 +18,10 @@ const PaymentSchema = new mongoose.Schema({
     type: String,
     enum: ["pending", "success", "failed"],
     default: "pending",
+  },
+  webhookTriggered: {
+    type: Boolean,
+    default: false, // false until webhook updates it
   },
 }, { timestamps: true });
 

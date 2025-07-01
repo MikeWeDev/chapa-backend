@@ -93,7 +93,7 @@ router.get("/check-payment/:tx_ref", async (req, res) => {
   try {
     const tx = await Payment.findOne({ tx_ref: req.params.tx_ref });
     if (!tx) return res.json({ status: "pending" });
-    res.json({ status: tx.status });
+    res.json({ status: tx.status,amount: tx.amount  });
   } catch (err) {
     res.status(500).json({ message: "Server error" });
   }

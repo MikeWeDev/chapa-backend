@@ -48,6 +48,7 @@ router.post("/accept-payment", async (req, res) => {
         last_name,
         phone_number,
         tx_ref,
+        return_url: `https://t.me/bingobosssbot` 
       },
       {
         headers: {

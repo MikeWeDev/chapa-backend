@@ -48,8 +48,7 @@ router.post("/accept-payment", async (req, res) => {
         last_name,
         phone_number,
         tx_ref,
-        return_url: `https://t.me/bingobosssbot` 
-      },
+       return_url: "tg://resolve?domain=bingobosssbot"      },
       {
         headers: {
           Authorization: `Bearer ${CHAPA_SECRET_KEY}`,
